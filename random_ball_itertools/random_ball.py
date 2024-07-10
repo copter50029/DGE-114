@@ -2,6 +2,7 @@ import itertools
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
+import pandas as pd
 #define the directory where the images are stored
 image_directory = os.path.join(os.path.dirname(__file__), 'color_ball')
 
@@ -9,9 +10,11 @@ image_directory = os.path.join(os.path.dirname(__file__), 'color_ball')
 
 color_images = {
     'red': os.path.join(os.path.dirname(__file__), 'color_ball/red_ball.png'),
-    #'blue': os.path.join(os.path.dirname(__file__), 'color_ball/blue_ball.png'),
-    #'green': os.path.join(os.path.dirname(__file__), 'color_ball/green_ball.png'),
-    'yellow': os.path.join(os.path.dirname(__file__), 'color_ball/yellow_ball.png')
+    'blue': os.path.join(os.path.dirname(__file__), 'color_ball/blue_ball.png'),
+    'green': os.path.join(os.path.dirname(__file__), 'color_ball/green_ball.png'),
+    'yellow': os.path.join(os.path.dirname(__file__), 'color_ball/yellow_ball.png'),
+    'orange': os.path.join(os.path.dirname(__file__), 'color_ball/orange_ball.png'),
+    'purple': os.path.join(os.path.dirname(__file__), 'color_ball/purple_ball.png'),
 
 }
 
@@ -20,21 +23,25 @@ colors = list(color_images.keys())
 permutations = list(itertools.permutations(colors))
 
 #Function to plot a permutation of images
-def plot_permutation(perm, index, ax):
+def plot_permutation(perm,index):
+    fig, ax = plt.subplots(1, len(perm), figsize=(12, 3))
     for i, color in enumerate(perm):
         img = mpimg.imread(color_images[color])
         ax[i].imshow(img)
         ax[i].axis('off')
         ax[i].set_title(color)
-    ax[0].set_ylabel(f'Permutation {index+1}', fontsize=16)
+    plt.suptitle(f'Permutation {index+1}', fontsize=16)
+    plt.show()
 
-# Adjust the loop to plot two permutations side by side
-fig, axs = plt.subplots(len(permutations)//2, len(colors), figsize=(20, len(permutations)*3))
 for index, perm in enumerate(permutations):
-    if index % 2 == 0:  # Even index, new row
-        plot_permutation(perm, index, axs[index//2])
-    else:  # Odd index, same row as previous
-        plot_permutation(perm, index, axs[index//2, len(colors):])
+    plot_permutation(perm, index)
+# Convert permutations to a DataFrame for easier CSV export
+df_permutations = pd.DataFrame(permutations, columns=[f'Color {i+1}' for i in range(len(colors))])
 
-plt.tight_layout()
-plt.show()
+# Define the CSV file path
+csv_file_path = os.path.join(os.path.dirname(__file__), 'permutation.csv')
+
+# Export the DataFrame to a CSV file
+df_permutations.to_csv(csv_file_path, index=False)
+
+print(f'Permutations have been saved to {csv_file_path}')
