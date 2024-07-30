@@ -1,0 +1,7 @@
+Permutation 1: purple
+Permutation 1: purple
+Permutation 2: orange
+Permutation 3: purple
+Permutation 4: yellow
+Permutation 5: orange
+Permutation 6: yellow
